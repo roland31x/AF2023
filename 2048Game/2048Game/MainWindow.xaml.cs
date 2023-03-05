@@ -26,11 +26,11 @@ namespace _2048Game
         double Percent = 0.7;
         bool GameWon = false;
         readonly Random rng = new Random();
-        TextBlock[,] Mat;
+        Label[,] Mat;
         public MainWindow()
         {
             InitializeComponent();
-            Mat = new TextBlock[Size, Size];
+            Mat = new Label[Size, Size];
             Height = 800;
             Width = 800;
             Draw();
@@ -88,7 +88,7 @@ namespace _2048Game
             {
                 for (int j = 0; j < Size; j++)
                 {
-                    TextBlock t = new TextBlock
+                    Label t = new Label
                     {
                         Width = (Area.Width) / Size - 2,
                         HorizontalAlignment = HorizontalAlignment.Center,
@@ -98,7 +98,8 @@ namespace _2048Game
                         Tag = "0",
                         FontSize = (Area.Width / Size) / 1.5,
                         Foreground = new SolidColorBrush(Colors.White),
-                        TextAlignment = TextAlignment.Center,
+                        VerticalContentAlignment = VerticalAlignment.Center,
+                        HorizontalContentAlignment = HorizontalAlignment.Center,
                         FontWeight = FontWeights.Bold,                       
                     };
                     Area.Children.Add(t);
@@ -133,7 +134,7 @@ namespace _2048Game
                 i = rng.Next(0, Size);
                 j = rng.Next(0, Size);
             }
-            TextBlock newBox = Mat[i, j];
+            Label newBox = Mat[i, j];
             newBox.Tag = "1";
         }
         public void GenerateNewBox()
@@ -154,7 +155,7 @@ namespace _2048Game
                 StartGame();
                 return;
             }
-            TextBlock newBox = Mat[i, j];
+            Label newBox = Mat[i, j];
             int chance = rng.Next(0, 3);
             if(chance == 2)
             {
@@ -344,15 +345,15 @@ namespace _2048Game
             StepsBox.Text = "Steps: " + Convert.ToString(Steps);
             ScoreBox.Text = "Score: " + Convert.ToString(Score);
         }
-        void TextBlockSet(int i, TextBlock t)
+        void TextBlockSet(int i, Label t)
         {
             if(i == 0)
             {
-                t.Text = "";
+                t.Content = "";
             }
             else
             {
-                t.Text = Convert.ToString(Math.Pow(2, i));
+                t.Content = Convert.ToString(Math.Pow(2, i));
             }
             if(i >= 7 && i < 10)
             {
