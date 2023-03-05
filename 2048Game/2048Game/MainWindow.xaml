@@ -8,6 +8,7 @@
         Title="MainWindow" Height="800" Width="800"
         ResizeMode="NoResize">
     <Canvas>
+        <Button x:Name="ResetButton" Click="Reset" Height="39" Width="140" HorizontalAlignment="Left" Canvas.Left="330" VerticalAlignment="Center" Canvas.Top="10" Background="#FFF564FF" Content="Reset"></Button>
         <Grid x:Name="Area">
 
         </Grid>
