@@ -21,17 +21,22 @@ namespace _2048Game
     public partial class MainWindow : Window
     {
         int Size = 4;
+        int Steps { get; set; }
+        int Score { get; set; }
         double Percent = 0.7;
+        bool GameWon = false;
         readonly Random rng = new Random();
-        TextBlock[,] Mat = new TextBlock[4, 4];
+        TextBlock[,] Mat;
         public MainWindow()
         {
             InitializeComponent();
+            Mat = new TextBlock[Size, Size];
             Height = 800;
             Width = 800;
             Draw();
             StartGame();
             KeyDown += Play;
+            
         }
 
         private void Play(object sender, KeyEventArgs e)
@@ -46,15 +51,21 @@ namespace _2048Game
                     MoveRight();
                     break;
                 case Key.Up:
-
+                    MoveUp();
                     break;
                 case Key.Down:
-
+                    MoveDown();
                     break;
-                default: break;
+                default: return;
             }
-            GenerateBox();
+            Steps++;
+            GenerateNewBox();
             ReDraw();
+            if (GameWon)
+            {
+                MessageBox.Show($"You win! Your score is: {Score}. You won in {Steps} steps.");
+                StartGame();
+            }
         }
 
         public void Draw()
@@ -85,9 +96,10 @@ namespace _2048Game
                         Height = (Area.Width) / Size - 2,
                         Background = new SolidColorBrush(Colors.Black),
                         Tag = "0",
-                        FontSize = ((Area.Height) / Size ) / 1.5,
+                        FontSize = (Area.Width / Size) / 1.5,
                         Foreground = new SolidColorBrush(Colors.White),
                         TextAlignment = TextAlignment.Center,
+                        FontWeight = FontWeights.Bold,                       
                     };
                     Area.Children.Add(t);
                     Grid.SetRow(t, i);
@@ -98,6 +110,16 @@ namespace _2048Game
         }
         public void StartGame()
         {
+            GameWon = false;
+            Steps = 0;
+            Score = 0;
+            for (int i = 0; i < Size; i++)
+            {
+                for (int j = 0; j < Size; j++)
+                {
+                    Mat[i, j].Tag = "0";
+                }
+            }
             GenerateBox();
             GenerateBox();
             ReDraw();
@@ -114,6 +136,116 @@ namespace _2048Game
             TextBlock newBox = Mat[i, j];
             newBox.Tag = "1";
         }
+        public void GenerateNewBox()
+        {
+            int i = rng.Next(0, Size);
+            int j = rng.Next(0, Size);
+            try
+            {
+                while (!OK(i, j))
+                {
+                    i = rng.Next(0, Size);
+                    j = rng.Next(0, Size);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                StartGame();
+                return;
+            }
+            TextBlock newBox = Mat[i, j];
+            int chance = rng.Next(0, 3);
+            if(chance == 2)
+            {
+                newBox.Tag = "2";
+            }
+            else newBox.Tag = "1";
+        }
+        void MoveUp()
+        {
+            for (int i = 0; i < Size; i++)
+            {
+                for (int j = 0; j < Size; j++)
+                {
+                    for (int k = j + 1; k < Size; k++)
+                    {
+                        if (Convert.ToInt32(Mat[j, i].Tag) != 0 && Convert.ToInt32(Mat[j, i].Tag) == Convert.ToInt32(Mat[k, i].Tag))
+                        {
+                            Mat[j, i].Tag = Convert.ToInt32(Mat[j, i].Tag) + 1;
+                            Mat[k, i].Tag = "0";
+                            Score += (int)Math.Pow(2, Convert.ToDouble(Mat[j, i].Tag));
+                            break;
+                        }
+                        else if (Convert.ToInt32(Mat[k, i].Tag) == 0)
+                        {
+                            continue;
+                        }
+                        else break;
+                    }
+                }
+                SortUp(i);
+            }
+        }
+        void SortUp(int i)
+        {
+            for (int k = 0; k < Size; k++)
+            {
+                if (Convert.ToInt16(Mat[k, i].Tag) == 0)
+                {
+                    for (int j = k + 1; j < Size; j++)
+                    {
+                        if (Convert.ToInt16(Mat[j, i].Tag) != 0)
+                        {
+                            (Mat[k, i].Tag, Mat[j, i].Tag) = (Mat[j, i].Tag, Mat[k, i].Tag);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        void MoveDown()
+        {
+            for (int i = 0; i < Size; i++)
+            {
+                for (int j = Size - 1; j >= 0; j--)
+                {
+                    for (int k = j - 1; k >= 0; k--)
+                    {
+                        if (Convert.ToInt32(Mat[j, i].Tag) != 0 && Convert.ToInt32(Mat[j, i].Tag) == Convert.ToInt32(Mat[k, i].Tag))
+                        {
+                            Mat[j, i].Tag = Convert.ToInt32(Mat[j, i].Tag) + 1;
+                            Mat[k, i].Tag = "0";
+                            Score += (int)Math.Pow(2, Convert.ToDouble(Mat[j, i].Tag));
+                            break;
+                        }
+                        else if (Convert.ToInt32(Mat[k, i].Tag) == 0)
+                        {
+                            continue;
+                        }
+                        else break;
+                    }
+                }
+                SortDown(i);
+            }
+        }
+        void SortDown(int i)
+        {
+            for (int k = Size - 1; k >= 0; k--)
+            {
+                if (Convert.ToInt16(Mat[k, i].Tag) == 0)
+                {
+                    for (int j = k - 1; j >= 0; j--)
+                    {
+                        if (Convert.ToInt16(Mat[j, i].Tag) != 0)
+                        {
+                            (Mat[k, i].Tag, Mat[j, i].Tag) = (Mat[j, i].Tag, Mat[k, i].Tag);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
         void MoveRight()
         {
             for (int i = 0; i < Size; i++)
@@ -126,7 +258,14 @@ namespace _2048Game
                         {
                             Mat[i, j].Tag = Convert.ToInt32(Mat[i, j].Tag) + 1;
                             Mat[i, k].Tag = "0";
+                            Score += (int)Math.Pow(2, Convert.ToDouble(Mat[i, j].Tag));
+                            break;
                         }
+                        else if (Convert.ToInt32(Mat[i, k].Tag) == 0)
+                        {
+                            continue;
+                        }
+                        else break;
                     }
                 }
                 SortRight(i);
@@ -143,7 +282,9 @@ namespace _2048Game
                         if (Convert.ToInt16(Mat[i, j].Tag) != 0)
                         {
                             (Mat[i, k].Tag, Mat[i, j].Tag) = (Mat[i, j].Tag, Mat[i, k].Tag);
+                            break;
                         }
+
                     }
                 }
             }
@@ -160,6 +301,7 @@ namespace _2048Game
                         {
                             Mat[i, j].Tag = Convert.ToInt32(Mat[i, j].Tag) + 1;
                             Mat[i, k].Tag = "0";
+                            Score += (int)Math.Pow(2, Convert.ToDouble(Mat[i, j].Tag));
                             break;
                         }
                         else if (Convert.ToInt32(Mat[i, k].Tag) == 0)
@@ -183,6 +325,7 @@ namespace _2048Game
                         if(Convert.ToInt16(Mat[i, j].Tag) != 0)
                         {
                             (Mat[i, k].Tag, Mat[i, j].Tag) = (Mat[i, j].Tag, Mat[i, k].Tag);
+                            break;
                         }
                     }
                 }
@@ -195,38 +338,39 @@ namespace _2048Game
             {
                 for(int j = 0; j < Size; j++)
                 {
-                    TextBlockSet(Convert.ToInt16(Mat[i, j].Tag), Mat[i, j]);                   
+                    TextBlockSet(Convert.ToInt16(Mat[i, j].Tag), Mat[i, j]);
                 }
             }
+            StepsBox.Text = "Steps: " + Convert.ToString(Steps);
+            ScoreBox.Text = "Score: " + Convert.ToString(Score);
         }
         void TextBlockSet(int i, TextBlock t)
         {
             if(i == 0)
             {
-                t.Background = new SolidColorBrush(Colors.Black);
                 t.Text = "";
             }
-            if (i == 1)
+            else
             {
-                t.Background = new SolidColorBrush(Colors.Tan);
-                t.Text = "2";
+                t.Text = Convert.ToString(Math.Pow(2, i));
             }
-            if (i == 2)
+            if(i >= 7 && i < 10)
             {
-                t.Background = new SolidColorBrush(Colors.Yellow);
-                t.Text = "4";
+                t.FontSize = ((Area.Width / Size) / 1.5) / 1.5;
             }
-            if (i == 3)
+            else if (i > 10)
             {
-                t.Background = new SolidColorBrush(Colors.Orange);
-                t.Text = "8";
+                t.FontSize = (((Area.Width / Size) / 1.5) / 1.5 ) / 1.5;
             }
-            if (i == 4)
+            else
             {
-                t.Background = new SolidColorBrush(Colors.OrangeRed);
-                t.Text = "16";
+                t.FontSize = (Area.Width / Size) / 1.5;
             }
-
+            if(i == 11)
+            {
+                GameWon = true;
+            }
+            t.Background = GetColor(i);
         }
         void Reset(object sender, RoutedEventArgs e)
         {
@@ -242,11 +386,61 @@ namespace _2048Game
         }
         bool OK(int i, int j)
         {
-            if (Convert.ToInt16(Mat[i, j].Tag) == 0)
+            bool canGenerate = false;
+            for(int i1 = 0; i1 < Size; i1++)
             {
-                return true;
+                for(int j1 = 0; j1 < Size; j1++)
+                {
+                    if (Convert.ToInt16(Mat[i1, j1].Tag) == 0)
+                    {
+                        canGenerate = true;
+                    }
+                }
             }
-            else return false;
+            if (canGenerate)
+            {
+                if (Convert.ToInt16(Mat[i, j].Tag) == 0)
+                {
+                    return true;
+                }
+                else return false;
+            }
+            else
+            {
+                throw new Exception("You lose! Try again!");
+            }
+            
+        }
+        static SolidColorBrush GetColor(int i)
+        {
+            switch (i)
+            {
+                case 1:
+                    return new SolidColorBrush(Colors.Tan);
+                case 2:
+                    return new SolidColorBrush(Colors.SandyBrown);
+                case 3:
+                    return new SolidColorBrush(Colors.LightYellow);
+                case 4:
+                    return new SolidColorBrush(Colors.Orange);
+                case 5:
+                    return new SolidColorBrush(Colors.Red);
+                case 6: 
+                    return new SolidColorBrush(Colors.Yellow);
+                case 7:
+                    return new SolidColorBrush(Colors.Teal);
+                case 8:
+                    return new SolidColorBrush(Colors.LawnGreen);
+                case 9:
+                    return new SolidColorBrush(Colors.LightBlue);
+                case 10:
+                    return new SolidColorBrush(Colors.Purple);
+                case 11:
+                    return new SolidColorBrush(Colors.Pink);
+                default:
+                    return new SolidColorBrush(Colors.Black);
+
+            }
         }
     }
 }

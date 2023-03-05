@@ -6,9 +6,13 @@
         xmlns:local="clr-namespace:_2048Game"
         mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="800"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen">
     <Canvas>
-        <Button x:Name="ResetButton" Click="Reset" Height="39" Width="140" HorizontalAlignment="Left" Canvas.Left="330" VerticalAlignment="Center" Canvas.Top="10" Background="#FFF564FF" Content="Reset"></Button>
+        <Button x:Name="ResetButton" Click="Reset" Height="70" Width="140" HorizontalAlignment="Center" Canvas.Left="330" VerticalAlignment="Top" Canvas.Top="687" Background="#FFF564FF" Content="RESET" FontSize="36"></Button>
+        <TextBlock HorizontalAlignment="Center" Height="70" VerticalAlignment="Top" Width="308" Text="2048 Game" TextAlignment="Center" FontSize="48" Canvas.Left="246" Canvas.Top="10"/>
+        <TextBlock x:Name="ScoreBox" HorizontalAlignment="Center" Height="70" VerticalAlignment="Top" Width="308" Text="0" TextAlignment="Center" FontSize="48" Canvas.Left="17" Canvas.Top="687"/>
+        <TextBlock x:Name="StepsBox" HorizontalAlignment="Center" Height="70" VerticalAlignment="Top" Width="308" Text="0" TextAlignment="Center" FontSize="48" Canvas.Left="482" Canvas.Top="687"/>
         <Grid x:Name="Area">
 
         </Grid>
