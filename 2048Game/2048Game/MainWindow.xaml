@@ -8,7 +8,7 @@
         Title="MainWindow" Height="800" Width="800"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen">
-    <Canvas>
+    <Canvas x:Name="MainCanvas">
         <Button x:Name="ResetButton" Click="Reset" Height="70" Width="140" HorizontalAlignment="Center" Canvas.Left="330" VerticalAlignment="Top" Canvas.Top="687" Background="#FFF564FF" Content="RESET" FontSize="36"></Button>
         <TextBlock HorizontalAlignment="Center" Height="70" VerticalAlignment="Top" Width="308" Text="2048 Game" TextAlignment="Center" FontSize="48" Canvas.Left="246" Canvas.Top="10"/>
         <TextBlock x:Name="ScoreBox" HorizontalAlignment="Center" Height="70" VerticalAlignment="Top" Width="308" Text="0" TextAlignment="Center" FontSize="48" Canvas.Left="17" Canvas.Top="687"/>
@@ -16,5 +16,12 @@
         <Grid x:Name="Area">
 
         </Grid>
+        <TextBlock Height="70" Width="146" Text="Current Mode:" TextAlignment="Center" FontSize="18" Canvas.Left="607" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Button x:Name="GameModeButton" Click="GameSwitch" Height="35" Width="140" Canvas.Left="610" Canvas.Top="45" Background="#FFFFE97C" Content="Classic" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <TextBlock x:Name="ResizeTBlock" Height="70" Width="146" Text="Resize grid:" TextAlignment="Center" FontSize="18" Canvas.Left="58" Canvas.Top="10" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/>
+        <TextBox x:Name="Resizer"  Height="35" Width="67" Canvas.Left="64" Canvas.Top="45" Background="#FFFFA8A8" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="Resizer_TextChanged" TextAlignment="Center" Visibility="Collapsed" IsEnabled="False"/>
+
+        <Button x:Name ="ResizerButton" Content="Set" Canvas.Left="160" Canvas.Top="49" Background="#FF49FF00" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Width="44" Click="ResizerButton_Click" IsEnabled="False" Visibility="Collapsed"/>
+        <RadioButton x:Name ="ResizerEnabler" Canvas.Left="44" Canvas.Top="55" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed" FontSize="0.01"/>
     </Canvas>
 </Window>

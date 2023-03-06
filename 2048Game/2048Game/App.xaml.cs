@@ -13,5 +13,7 @@ namespace _2048Game
     /// </summary>
     public partial class App : Application
     {
+        public static int GameSize = 4;
+        public static bool IsClassic = true;
     }
 }

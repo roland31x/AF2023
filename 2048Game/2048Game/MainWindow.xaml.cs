@@ -20,11 +20,12 @@ namespace _2048Game
     /// </summary>
     public partial class MainWindow : Window
     {
-        int Size = 4;
+        int Size = App.GameSize;
         int Steps { get; set; }
         int Score { get; set; }
-        double Percent = 0.7;
+        readonly double Percent = 0.7;
         bool GameWon = false;
+        bool Classic = App.IsClassic;
         readonly Random rng = new Random();
         Label[,] Mat;
         public MainWindow()
@@ -36,7 +37,9 @@ namespace _2048Game
             Draw();
             StartGame();
             KeyDown += Play;
-            
+            ResizerEnabler.FocusVisualStyle = null;
+            GameModeButton.FocusVisualStyle = null;
+            ResetButton.FocusVisualStyle = null;
         }
 
         private void Play(object sender, KeyEventArgs e)
@@ -63,14 +66,21 @@ namespace _2048Game
             ReDraw();
             if (GameWon)
             {
-                MessageBox.Show($"You win! Your score is: {Score}. You won in {Steps} steps.");
-                StartGame();
+                if (Classic)
+                {
+                    MessageBox.Show($"You win! Your score is: {Score}. You won in {Steps} steps.");
+                    StartGame();
+                }
+                else
+                {
+                    MessageBox.Show($"You win! Endless mode is enabled you can continue playing.");
+                }
             }
         }
 
         public void Draw()
         {
-            Area.Background = new SolidColorBrush(Colors.Black);
+            Area.Background = new SolidColorBrush(Colors.LightGray);
             Area.Height = Height * Percent;
             Area.Width = Width * Percent;
             Canvas.SetLeft(Area, (Width - Width * Percent) / 2);
@@ -359,7 +369,7 @@ namespace _2048Game
             {
                 t.FontSize = ((Area.Width / Size) / 1.5) / 1.5;
             }
-            else if (i > 10)
+            else if (i >= 10)
             {
                 t.FontSize = (((Area.Width / Size) / 1.5) / 1.5 ) / 1.5;
             }
@@ -367,7 +377,7 @@ namespace _2048Game
             {
                 t.FontSize = (Area.Width / Size) / 1.5;
             }
-            if(i == 11)
+            if (i == 11)
             {
                 GameWon = true;
             }
@@ -408,7 +418,7 @@ namespace _2048Game
             }
             else
             {
-                throw new Exception("You lose! Try again!");
+                throw new Exception($"You lose! You achieved a score of {Score}! Try again!");
             }
             
         }
@@ -421,7 +431,7 @@ namespace _2048Game
                 case 2:
                     return new SolidColorBrush(Colors.SandyBrown);
                 case 3:
-                    return new SolidColorBrush(Colors.LightYellow);
+                    return new SolidColorBrush(Colors.RosyBrown);
                 case 4:
                     return new SolidColorBrush(Colors.Orange);
                 case 5:
@@ -442,6 +452,77 @@ namespace _2048Game
                     return new SolidColorBrush(Colors.Black);
 
             }
+        }
+
+        private void GameSwitch(object sender, RoutedEventArgs e)
+        {
+            if (Classic)
+            {
+                Button b = sender as Button;
+                b.Content = "Endless";
+                b.Background = new SolidColorBrush(Colors.Goldenrod);
+                Classic = false;
+                Resizer.Visibility = Visibility.Visible;
+                ResizerButton.Visibility = Visibility.Visible;
+                ResizeTBlock.Visibility = Visibility.Visible;
+                ResizerEnabler.Visibility = Visibility.Visible;
+                StartGame();
+
+            }
+            else
+            {
+                Button b = sender as Button;
+                b.Content = "Classic";
+                b.Background = new SolidColorBrush(Color.FromRgb(255,233,124));
+                Classic = true;
+                Resizer.Visibility = Visibility.Collapsed;
+                ResizerButton.Visibility = Visibility.Collapsed;
+                ResizeTBlock.Visibility = Visibility.Collapsed;
+                ResizerEnabler.Visibility = Visibility.Collapsed;
+                Size = 4;
+                Area = new Grid();
+                MainCanvas.Children.Add(Area);
+                Mat = new Label[Size, Size];
+                Draw();
+                StartGame();
+            }
+        }
+
+        private void Resizer_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ResizerButton.IsEnabled = false;
+            if (int.TryParse(Resizer.Text, out int value))
+            {
+                if (value < 4 || value > 32)
+                {
+                    ResizerButton.IsEnabled = false;
+                    return;
+                }
+                else
+                {
+                    ResizerButton.IsEnabled = true;
+                }
+            }
+        }
+
+        private void ResizerButton_Click(object sender, RoutedEventArgs e)
+        {
+            Size = int.Parse(Resizer.Text);
+            Area = new Grid();
+            MainCanvas.Children.Add(Area);
+            Mat = new Label[Size, Size];
+            Draw();
+            StartGame();
+            
+        }
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            Resizer.IsEnabled = true;
+        }
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Resizer.IsEnabled = false;
         }
     }
 }
