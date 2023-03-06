@@ -64,16 +64,12 @@ namespace _2048Game
             Steps++;
             GenerateNewBox();
             ReDraw();
-            if (GameWon)
+            if (Classic)
             {
-                if (Classic)
+                if (GameWon)
                 {
                     MessageBox.Show($"You win! Your score is: {Score}. You won in {Steps} steps.");
                     StartGame();
-                }
-                else
-                {
-                    MessageBox.Show($"You win! Endless mode is enabled you can continue playing.");
                 }
             }
         }
