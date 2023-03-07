@@ -22,6 +22,6 @@
         <TextBox x:Name="Resizer"  Height="35" Width="67" Canvas.Left="64" Canvas.Top="45" Background="#FFFFA8A8" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="Resizer_TextChanged" TextAlignment="Center" Visibility="Collapsed" IsEnabled="False"/>
 
         <Button x:Name ="ResizerButton" Content="Set" Canvas.Left="160" Canvas.Top="49" Background="#FF49FF00" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Width="44" Click="ResizerButton_Click" IsEnabled="False" Visibility="Collapsed"/>
-        <RadioButton x:Name ="ResizerEnabler" Canvas.Left="44" Canvas.Top="55" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed" FontSize="0.01"/>
+        <CheckBox x:Name ="ResizerEnabler" Canvas.Left="44" Canvas.Top="55" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed" FontSize="0.01"/>
     </Canvas>
 </Window>

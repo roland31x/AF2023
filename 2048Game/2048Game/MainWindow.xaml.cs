@@ -503,13 +503,16 @@ namespace _2048Game
 
         private void ResizerButton_Click(object sender, RoutedEventArgs e)
         {
+            
             Size = int.Parse(Resizer.Text);
             Area = new Grid();
             MainCanvas.Children.Add(Area);
             Mat = new Label[Size, Size];
             Draw();
             StartGame();
-            
+            Resizer.Text = "";
+            ResizerEnabler.IsChecked = false;
+
         }
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
