@@ -100,7 +100,7 @@ namespace _2048Game
                         HorizontalAlignment = HorizontalAlignment.Center,
                         VerticalAlignment = VerticalAlignment.Center,
                         Height = (Area.Width) / Size - 2,
-                        Background = new SolidColorBrush(Colors.Black),
+                        Background = new SolidColorBrush(Colors.Gray),
                         Tag = "0",
                         FontSize = (Area.Width / Size) / 1.5,
                         Foreground = new SolidColorBrush(Colors.White),
@@ -363,15 +363,15 @@ namespace _2048Game
             }
             if(i >= 7 && i < 10)
             {
-                t.FontSize = ((Area.Width / Size) / 1.5) / 1.5;
+                t.FontSize = (Area.Width / Size) / 2;
             }
             else if (i >= 10)
             {
-                t.FontSize = (((Area.Width / Size) / 1.5) / 1.5 ) / 1.5;
+                t.FontSize = (Area.Width / Size) / 3.5;
             }
             else
             {
-                t.FontSize = (Area.Width / Size) / 1.5;
+                t.FontSize = (Area.Width / Size) / 1.75;
             }
             if (i == 11)
             {
@@ -422,6 +422,8 @@ namespace _2048Game
         {
             switch (i)
             {
+                case 0:
+                    return new SolidColorBrush(Colors.Gray);
                 case 1:
                     return new SolidColorBrush(Colors.Tan);
                 case 2:
@@ -489,7 +491,7 @@ namespace _2048Game
             ResizerButton.IsEnabled = false;
             if (int.TryParse(Resizer.Text, out int value))
             {
-                if (value < 4 || value > 32)
+                if (value < 4 || value > 12)
                 {
                     ResizerButton.IsEnabled = false;
                     return;
