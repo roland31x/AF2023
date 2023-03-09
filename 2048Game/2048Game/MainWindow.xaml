@@ -14,7 +14,6 @@
         <TextBlock x:Name="ScoreBox" HorizontalAlignment="Center" Height="70" VerticalAlignment="Top" Width="308" Text="0" TextAlignment="Center" FontSize="48" Canvas.Left="17" Canvas.Top="687"/>
         <TextBlock x:Name="StepsBox" HorizontalAlignment="Center" Height="70" VerticalAlignment="Top" Width="308" Text="0" TextAlignment="Center" FontSize="48" Canvas.Left="482" Canvas.Top="687"/>
         <Grid x:Name="Area">
-
         </Grid>
         <TextBlock Height="70" Width="146" Text="Current Mode:" TextAlignment="Center" FontSize="18" Canvas.Left="607" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         <Button x:Name="GameModeButton" Click="GameSwitch" Height="35" Width="140" Canvas.Left="610" Canvas.Top="45" Background="#FFFFE97C" Content="Classic" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Center"/>
