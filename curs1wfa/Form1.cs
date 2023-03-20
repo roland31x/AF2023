@@ -56,11 +56,11 @@ namespace curs1wfa
             {
                 label1.Text = "5";
             }
-            if(max == 4)
+            if (max == 4)
             {
                 label1.Text = "4";
             }
-            if(max == 3 && cont2 == 2)
+            if (max == 3 && cont2 == 2)
             {
                 label1.Text = "3 & 2";
             }
@@ -76,7 +76,12 @@ namespace curs1wfa
             {
                 label1.Text = "2";
             }
-            
+
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
