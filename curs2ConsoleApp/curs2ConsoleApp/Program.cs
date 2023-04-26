@@ -10,11 +10,142 @@ namespace curs2ConsoleApp
 {
     internal class Program
     {
+        //https://invata.info/2017/09/25/rezolvare-bac-informatica-2009-varianta-69-subiectul-al-iii-lea-problema-4/
         static void Main(string[] args)
         {
             //P1();
             //P1_1();
-            P2();
+            //P2();
+            //int a = 25;
+            //int b = 144;
+            //int[] x = new int[] { 0, 2, 4, -5, 2, 5, 1, 2, 10, 11, 15, -2, 1 };
+            //Console.WriteLine(SubprogramVar31(x, x.Length, 7));
+            //Var31Ex4();
+            //SubprogramPVar44(a, b);
+            //Var69Ex4();
+            int[] x = new int[] { 0, 2, 4, -5, 2, 5, 1, 2, 10, 11, 15, -2, 1 };
+            InsertionSort(x, x.Length);
+            Array.ForEach<int>(x, v => Console.Write(v + " "));
+        }
+        static void Var69Ex4()
+        {
+            StreamReader sr = new StreamReader(@"..\..\data.in");
+            StringBuilder pare = new StringBuilder();
+            StringBuilder impare = new StringBuilder();
+
+            int n = int.Parse(sr.ReadLine());
+            string[] tokens = sr.ReadLine().Split(' ');
+            for(int i = 0; i < n; i++)
+            {
+                if (int.Parse(tokens[i]) % 2 == 0)
+                {
+                    pare.Append(tokens[i] + " ");
+                }
+                if (int.Parse(tokens[n - i - 1]) % 2 == 1)
+                {
+                    impare.Append(tokens[n - i - 1] + " ");
+                }
+            }
+            Console.WriteLine(pare.ToString() + impare.ToString());
+
+            sr.Close();
+        }
+        static void Var31Ex4()
+        {
+            StreamReader sr = new StreamReader(@"..\..\data.in");
+            string line = sr.ReadLine();
+            int n = int.Parse(line);
+            int minsegment = int.MinValue;
+            int maxsegment = int.MaxValue;
+            for(int i = 0; i < n; i++)
+            {
+                line = sr.ReadLine();
+                int x = int.Parse(line.Split(' ')[0]);
+                int y = int.Parse(line.Split(' ')[1]);
+                if(x > minsegment)
+                {
+                    minsegment = x;
+                }
+                if(y < maxsegment)
+                {
+                    maxsegment = y;
+                }
+            }
+            if(minsegment > maxsegment)
+            {
+                Console.WriteLine(0);
+            }
+            else
+            {
+                Console.WriteLine(minsegment + " " + maxsegment);
+            }
+            sr.Close();
+        }
+        
+        static void SubprogramPVar44(int a, int b)
+        {
+            int min = a, max = b;
+            if (a > b)
+            {
+                min = b;
+                max = a;
+            }
+            //for(int i = min + 1; i < max; i++)
+            //{
+            //    if(isPrim(Math.Sqrt(i)))
+            //    {
+            //        Console.Write(i + " ");
+            //    }
+            //}
+            for (int i = (int)Math.Sqrt(min) + 1; i < (int)Math.Sqrt(max); i++)
+            {
+                if (isPrim(i))
+                {
+                    Console.Write(i * i + " ");
+                }
+            }
+
+        }
+        static int SubprogramVar31(int[] x, int n, int m)
+        {
+            int suma = 0;
+            int[] fq = new int[n];
+            for(int i = 0; i < m; i++)
+            {
+                int min = int.MaxValue;
+                int minIndex = -1;
+                for(int j = 0; j < n; j++)
+                {
+                    if (fq[j] == 1)
+                    {
+                        continue;
+                    }
+                    if(min > x[j])
+                    {
+                        min = x[j];
+                        minIndex = j;
+                    }
+                }
+                suma += min;
+                fq[minIndex] = 1;
+            }
+            return suma;
+        }
+
+        static bool isPrim(double d)
+        {
+            //if(Math.Round(d,0) != d)
+            //{
+            //    return false;
+            //}
+            for(int i = 2; i <= d / 2; i++)
+            {
+                if(d % i == 0)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
         //Se da un numar intreg. Construiti numarul minim si maxim ce se poate obtine cu cifrele acestuia
         static void P1()
@@ -98,6 +229,18 @@ namespace curs2ConsoleApp
                 }
             }          
         }
+        static void InsertionSort(int[]v, int k)
+        {
+            for(int j = 0; j < k; j++)
+            {
+                int i = j;
+                while (i - 1 >= 0 && v[i] < v[i - 1])
+                {
+                    (v[i], v[i - 1]) = (v[i - 1], v[i]);
+                    i--;
+                }
+            }
+        }
         static void SelectionSort(int[]v, int k) // P3
         {
             // sortare2 : selection sort // P3
@@ -128,7 +271,7 @@ namespace curs2ConsoleApp
                 ok = true;
                 for (int i = 0; i < k - 1 - helper; i++)
                 {
-                    if (v[i] < v[i + 1])
+                    if (v[i] > v[i + 1])
                     {
                         (v[i], v[i + 1]) = (v[i + 1], v[i]);
                         ok = false;
