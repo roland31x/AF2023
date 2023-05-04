@@ -22,16 +22,16 @@ namespace curs6_Poligoane
                 test[i].Draw(g.gfx);
             }
             g.Refresh();
-            Matrix test1 = new Matrix(3, 3, 0, 2);
+            Matrix test1 = new Matrix(18, 18, 0, 2);
             Matrix test2 = new Matrix(3, 3, 0, 2);
-            Matrix test3 = test1 * test2;
+            //Matrix test3 = test1 * test2;
             ViewMat(test1);
             ViewMat(test2);
-            ViewMat(test3);
+            //ViewMat(test3);
         }
         public void ViewMat(Matrix mat)
         {
-            foreach(string s in mat.View())
+            foreach (string s in mat.View())
             {
                 listBox1.Items.Add(s);
             }

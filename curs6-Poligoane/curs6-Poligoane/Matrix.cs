@@ -22,13 +22,15 @@ namespace curs6_Poligoane
         public Matrix(int n, int m, int min, int max)
         {
             A = new int[n, m];
-            for(int i = 0; i < n; i++)
-            {
-                for(int j = 0; j < n; j++)
+            for (int i = 0; i <= n / 2; i++)
+                for (int j = i; j < n - i; j++)
                 {
-                    A[i, j] = rng.Next(min, max);
+                    A[i, j] = 1;
+                    matrix[j, n - i - 1] = 2;
+                    matrix[n - i - 1, j] = 3;
+                    matrix[j, i] = 4;
                 }
-            }
+
         }
         public Matrix(int n)
         {
@@ -56,15 +58,15 @@ namespace curs6_Poligoane
             {
                 return Empty;
             }
-            Matrix result = new Matrix(left.m, right.n);
+            Matrix result = new Matrix(left.n, right.m);
             for(int i = 0; i < left.n; i++)
             {
                 for(int j = 0; j < right.m; j++)
                 {
                     result.A[i, j] = 0;
-                    for(int k = 0; k < left.n; k++)
+                    for(int k = 0; k < left.m; k++)
                     {
-                        result.A[i,j] = left.A[i,k] * right.A[k,j];
+                        result.A[i,j] += left.A[i,k] * right.A[k,j];
                     }
                 }
             }
