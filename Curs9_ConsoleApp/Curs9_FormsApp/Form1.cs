@@ -15,6 +15,7 @@ namespace Curs9_FormsApp
             InitializeComponent();
             Height = 900;
             Width = 900;
+            StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.None;
             //PictureBox hoverbox = new PictureBox();
             //hoverbox.Parent = this;
@@ -52,10 +53,93 @@ namespace Curs9_FormsApp
             pictureBox1.Location = new Point(50, 50);
             pictureBox1.Width = 800;
             pictureBox1.Height = 800;
-            await DrawSet(pictureBox1, XStart, XEnd, YStart, YEnd);
-            SetLabelText(labels);
+            await Task.Delay(100);
+            SierpinskiRectangleFunction(pictureBox1);
+            //await DrawSet(pictureBox1, XStart, XEnd, YStart, YEnd);
+            //SetLabelText(labels);
         }
+        void SierpinskiRectangleFunction(PictureBox pb)
+        {
+            Graphics g = pb.CreateGraphics();
+            Pen p = new Pen(Color.Black, 1);
+            PointF[] rect = new PointF[4]
+            {
+                new PointF(0,0),
+                new PointF(pb.Width, 0),
+                new PointF(pb.Width, pb.Height),
+                new PointF(0,pb.Height),
+            };
+            RecursiveRectangleSierpinski(pb, g, p, rect);
+        }
+        void RecursiveRectangleSierpinski(PictureBox pb, Graphics g, Pen p, PointF[] rect)
+        {
+            float dist = Dist(rect[0], rect[1]) / 3;
+            if (dist < 1)
+                return;
+            g.DrawPolygon(p,rect);
+            for(int i = 0; i < 9; i++)
+            {
+                if(i == 4)
+                {
+                    continue;
+                }
+                PointF[] newRect = new PointF[4];
+                newRect[0] = new PointF(rect[0].X + (i % 3) * dist, rect[0].Y + (i / 3) * dist);
+                newRect[1] = new PointF(newRect[0].X + dist, newRect[0].Y);
+                newRect[2] = new PointF(newRect[0].X + dist, newRect[0].Y + dist);
+                newRect[3] = new PointF(newRect[0].X, newRect[0].Y + dist);
 
+                RecursiveRectangleSierpinski(pb, g, p, newRect);
+            }
+        }
+        void SierpinskiTriangleFunction(PictureBox pb)
+        {
+            Graphics g = pb.CreateGraphics();
+            int offset = 10;
+            PointF[] pointarray = new PointF[3];
+            pointarray[0] = new PointF(offset, pb.Height - offset); // bottom left
+            pointarray[1] = new PointF(pb.Width - offset, pb.Height - offset); // bottom right
+            pointarray[2] = new PointF(pb.Width / 2, offset); // top point
+            Pen p = new Pen(Color.Black, 1);
+            RecursiveSierpinskiTriangle(pb, g, p, pointarray);
+        }
+        void RecursiveSierpinskiTriangle(PictureBox pb, Graphics g, Pen p, PointF[] pointarray)
+        {
+            if (Dist(pointarray[0], pointarray[1]) < 2)
+                return;
+            g.DrawPolygon(p, pointarray);
+            PointF[] NewTriangle = new PointF[]
+            {
+                MiddlePoint(pointarray[0],pointarray[1]), // bottom point
+                MiddlePoint(pointarray[0],pointarray[2]), // top left
+                MiddlePoint(pointarray[1],pointarray[2]), // top right
+            };
+            PointF[] UpperTriangle = new PointF[]
+            {
+                NewTriangle[1], NewTriangle[2], pointarray[2],
+            };
+            PointF[] BottomLeftTriangle = new PointF[]
+            {
+                pointarray[0], NewTriangle[0], NewTriangle[1],
+            };
+            PointF[] BottomRightTriangle = new PointF[]
+            {
+                NewTriangle[0], pointarray[1], NewTriangle[2],
+            };
+            RecursiveSierpinskiTriangle(pb, g, p, UpperTriangle);
+            RecursiveSierpinskiTriangle(pb, g, p, BottomRightTriangle);
+            RecursiveSierpinskiTriangle(pb, g, p, BottomLeftTriangle);
+        }
+        float Dist(PointF left, PointF right)
+        {
+            return (float)Math.Sqrt((left.X - right.X) * (left.X - right.X) + (left.Y - right.Y) * (left.Y - right.Y));
+        }
+        PointF MiddlePoint(PointF left, PointF right)
+        {
+            float x = Math.Min(left.X, right.X) + Math.Abs(left.X - right.X) / 2;
+            float y = Math.Min(left.Y, right.Y) + Math.Abs(left.Y - right.Y) / 2;
+            return new PointF(x, y);
+        }
         private void SetLabelText(Label[] labels)
         {
             for(int i=0;i<labels.Length;i++)
