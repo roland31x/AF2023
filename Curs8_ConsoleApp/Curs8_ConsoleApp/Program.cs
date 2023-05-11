@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,14 +11,36 @@ namespace Curs8_ConsoleApp
     {
         static void Main(string[] args)
         {
+            TT();
             //P1();
             //P2();
-            P3();
+            //P3();
         }
         // se da o suma S
         // se da un set de valori ( bancnote )
         // se cere sa se scrie S ca si o combinatie de elemente V
         // se cere numarul minim de bancnote care se poate folosi
+        async static void TT()
+        {
+            T1();
+            T2();
+        }
+        async static void T1()
+        {
+            while (true)
+            {
+                Console.Write("1");
+                await Task.Delay(100);
+            }
+        }
+        async static void T2()
+        {
+            while (true)
+            {
+                Console.Write("2");
+                await Task.Delay(1000);
+            }
+        }
         static void P1()
         {
             int[] v = new int[] { 1000, 500, 100, 50, 20, 10, 5, 1 };
