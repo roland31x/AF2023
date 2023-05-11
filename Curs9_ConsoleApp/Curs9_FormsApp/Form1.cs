@@ -8,6 +8,8 @@ namespace Curs9_FormsApp
         double XEnd = 2;
         double YEnd = 2;
         int ZoomSize = 200;
+        bool isLoading = false;
+        Label[] labels = new Label[6];
         public Form1()
         {
             InitializeComponent();
@@ -31,16 +33,54 @@ namespace Curs9_FormsApp
 
         //}
 
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
+            
+            for(int i=0;i<6;i++)
+            {
+                labels[i] = new Label()
+                {
+                    Location = new Point(100 + (i % 3) * 205, (i / 3) * 20),
+                    Width = 200,
+                    Parent = this,
+                };
+               
+                labels[i].SendToBack();
+                
+            }
             pictureBox1.BorderStyle = BorderStyle.FixedSingle;
             pictureBox1.Location = new Point(50, 50);
             pictureBox1.Width = 800;
             pictureBox1.Height = 800;
-            DrawSet(pictureBox1, XStart, XEnd, YStart, YEnd);
+            await DrawSet(pictureBox1, XStart, XEnd, YStart, YEnd);
+            SetLabelText(labels);
         }
-        void DrawSet(PictureBox pb, double XStart = -2, double XEnd = 2, double YStart = -2, double YEnd = 2)
+
+        private void SetLabelText(Label[] labels)
         {
+            for(int i=0;i<labels.Length;i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        labels[i].Text = "X:"; break;
+                    case 1:
+                        labels[i].Text = XStart.ToString(); break;
+                    case 2:
+                        labels[i].Text = XEnd.ToString(); break;
+                    case 3:
+                        labels[i].Text = "Y:"; break;
+                    case 4:
+                        labels[i].Text = (-YEnd).ToString(); break;
+                    case 5:
+                        labels[i].Text = (-YStart).ToString(); break;
+                }
+            }
+        }
+
+        Task DrawSet(PictureBox pb, double XStart = -2, double XEnd = 2, double YStart = -2, double YEnd = 2)
+        {
+            
             Bitmap bmp = new Bitmap(pb.Width, pb.Height);
             for (int i = 0; i < bmp.Height; i++)
             {
@@ -60,6 +100,7 @@ namespace Curs9_FormsApp
                 }
             }
             pb.BackgroundImage = bmp;
+            return Task.CompletedTask;
         }
         public static Color Rainbow(float progress)
         {
@@ -89,22 +130,27 @@ namespace Curs9_FormsApp
 
         }
 
-        private void PB_MouseDown(object sender, MouseEventArgs e)
+        private async void PB_MouseDown(object sender, MouseEventArgs e)
         {
+            if (isLoading) 
+                return;
+            isLoading = true;
             PictureBox clicked = (PictureBox)sender;
             Graphics g = clicked.CreateGraphics();
             double newXstart = (((double)e.X - (double)ZoomSize / 2) / (double)clicked.Width) * (XEnd - XStart) + XStart;
             double newXend = (((double)e.X + (double)ZoomSize / 2) / (double)clicked.Width) * (XEnd - XStart) + XStart;
             double newYstart = (((double)e.Y - (double)ZoomSize / 2) / (double)clicked.Height) * (YEnd - YStart) + YStart;
             double newYend = (((double)e.Y + (double)ZoomSize / 2) / (double)clicked.Height) * (YEnd - YStart) + YStart;
-            g.DrawRectangle(new Pen(Color.Red, 2), new Rectangle((int)(e.X - ZoomSize / 2), (int)(e.Y - ZoomSize / 2), ZoomSize, ZoomSize));
+            g.DrawRectangle(new Pen(Color.White, 5), new Rectangle((int)(e.X - ZoomSize / 2), (int)(e.Y - ZoomSize / 2), ZoomSize, ZoomSize));
             //Thread.Sleep(10000);
             XStart = newXstart;
             XEnd = newXend;
             YStart = newYstart;
             YEnd = newYend;
 
-            DrawSet(pictureBox1, XStart, XEnd, YStart, YEnd);
+            await Task.Run(() => DrawSet(pictureBox1, XStart, XEnd, YStart, YEnd));
+            SetLabelText(labels);
+            isLoading = false;
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
