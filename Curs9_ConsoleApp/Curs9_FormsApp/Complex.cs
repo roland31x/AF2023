@@ -9,7 +9,7 @@ namespace Curs9_FormsApp
 {
     public class Complex
     {
-        public static int MaxIterations = 1000;
+        public static int MaxIterations = 100;
         public double Re { get; private set; }
         public double Im { get; private set; }
         public char Sgn
