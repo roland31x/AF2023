@@ -54,9 +54,9 @@ namespace Curs9_FormsApp
             pictureBox1.Width = 800;
             pictureBox1.Height = 800;
             await Task.Delay(100);
-            SierpinskiRectangleFunction(pictureBox1);
-            //await DrawSet(pictureBox1, XStart, XEnd, YStart, YEnd);
-            //SetLabelText(labels);
+            //SierpinskiRectangleFunction(pictureBox1);
+            await DrawSet(pictureBox1, XStart, XEnd, YStart, YEnd);
+            SetLabelText(labels);
         }
         void SierpinskiRectangleFunction(PictureBox pb)
         {
@@ -69,9 +69,9 @@ namespace Curs9_FormsApp
                 new PointF(pb.Width, pb.Height),
                 new PointF(0,pb.Height),
             };
-            RecursiveRectangleSierpinski(pb, g, p, rect);
+            RecursiveSierpinskiRectangle(g, p, rect);
         }
-        void RecursiveRectangleSierpinski(PictureBox pb, Graphics g, Pen p, PointF[] rect)
+        void RecursiveSierpinskiRectangle(Graphics g, Pen p, PointF[] rect)
         {
             float dist = Dist(rect[0], rect[1]) / 3;
             if (dist < 1)
@@ -89,7 +89,7 @@ namespace Curs9_FormsApp
                 newRect[2] = new PointF(newRect[0].X + dist, newRect[0].Y + dist);
                 newRect[3] = new PointF(newRect[0].X, newRect[0].Y + dist);
 
-                RecursiveRectangleSierpinski(pb, g, p, newRect);
+                RecursiveSierpinskiRectangle(g, p, newRect);
             }
         }
         void SierpinskiTriangleFunction(PictureBox pb)
@@ -178,7 +178,7 @@ namespace Curs9_FormsApp
                     }
                     else
                     {
-                        result = Rainbow(((float)n / (float)Complex.MaxIterations));
+                        result = Rainbow(((float)n / ((float)Complex.MaxIterations / 5)));
                     }
                     bmp.SetPixel(i, j, result);
                 }
@@ -226,7 +226,7 @@ namespace Curs9_FormsApp
             double newYstart = (((double)e.Y - (double)ZoomSize / 2) / (double)clicked.Height) * (YEnd - YStart) + YStart;
             double newYend = (((double)e.Y + (double)ZoomSize / 2) / (double)clicked.Height) * (YEnd - YStart) + YStart;
             g.DrawRectangle(new Pen(Color.White, 5), new Rectangle((int)(e.X - ZoomSize / 2), (int)(e.Y - ZoomSize / 2), ZoomSize, ZoomSize));
-            //Thread.Sleep(10000);
+
             XStart = newXstart;
             XEnd = newXend;
             YStart = newYstart;
